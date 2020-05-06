@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 align="center">Товары:</h1>
+{% if username %}
+Вы вошли как {{ username }}
+{% endif %}
+{% for item in products%}
+<div>
+    <h2>Product # {{item.id}}</h2>
+    <div>
+        <table class="table">
+          <thead>
+            <tr bgcolor="#B6B6B6">
+              <td>Seller</td>
+              <td>Title</td>
+              <td>Number</td>
+              <td>Image</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr bgcolor="#D2D2D2">
+              <td>{{ item.seller }}</td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.number }}</td>
+              <td bgcolor="#FFE475">{{ item.image }}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
