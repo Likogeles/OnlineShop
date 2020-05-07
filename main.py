@@ -51,9 +51,9 @@ def register():
     session = db_session.create_session()
 
     if form.validate_on_submit():
-        if not form.age.data.isdigit():
+        if session.query(users.User).filter(users.User.email == form.email.data).first():
             return render_template('register.html',
-                                   agemassage="Неправильно введён возраст",
+                                   emailmassage="Этот email уже используется",
                                    form=form)
         if not form.password1.data == form.password2.data:
             return render_template('register.html',
@@ -96,6 +96,13 @@ def login():
                                messageemail="Неправильный email",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/log_out', methods=['GET', 'POST'])
+def log_out():
+    res = make_response(redirect("/"))
+    res.set_cookie("user_id", str(0), max_age=0)
+    return res
 
 
 @app.route('/')

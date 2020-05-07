@@ -10,41 +10,55 @@
     <title>{{title}}</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark justify-content-between">
+    <div class="badge badge-primary text-wrap" style="width: 13rem;" align="center">
+        <h4>АлиАкспресc</h4>
+    </div>
+</nav>
+<br>
+<br>
+<br>
 <h1 align="center">Авторизация</h1>
 <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <p align="center">
-        {{ form.email.label }}<br>
-        {{ form.email(class="form-control", placeholder="Email address") }}<br>
-        {% for error in form.email.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endfor %}
-    </p>
-    <p align="center">
-        {% if messageemail %}
-            <div class="alert alert-danger" role="alert">
-                {{ messageemail }}
-            </div>
-        {% endif %}
-    </p>
-    <p align="center">
-        {{ form.password.label }}<br>
-        {{ form.password(class="form-control", type="password", placeholder="Password") }}<br>
-        {% for error in form.password.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endfor %}
-    </p>
-    <p align="center">
-        {% if messagepass %}
-            <div class="alert alert-danger" role="alert">
-                {{ messagepass }}
-            </div>
-        {% endif %}
-    </p>
-    <p align="center">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <div class="row">
+    <div class="col"></div>
+    <div class="col" align="center">
+        {{ form.hidden_tag() }}
+        <p align="center">
+            {{ form.email.label }}<br>
+            {{ form.email(class="form-control", placeholder="Ваш Email") }}<br>
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p align="center">
+            {% if messageemail %}
+                <div class="alert alert-danger" role="alert">
+                    {{ messageemail }}
+                </div>
+            {% endif %}
+        </p>
+        <p align="center">
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control", type="password", placeholder="Ваш пароль") }}<br>
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p align="center">
+            {% if messagepass %}
+                <div class="alert alert-danger" role="alert">
+                    {{ messagepass }}
+                </div>
+            {% endif %}
+        </p>
+        <p align="center">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </div>
+    <div class="col"></div>
+    </div>
 </form>
 </body>

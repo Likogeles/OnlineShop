@@ -10,59 +10,73 @@
     <title>{{title}}</title>
 </head>
 <body>
-<h1>Регистрация</h1>
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark justify-content-between">
+    <div class="badge badge-primary text-wrap" style="width: 13rem;" align="center">
+        <h4>АлиАкспресc</h4>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<h1 align="center">Регистрация</h1>
 <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(class="form-control") }}<br>
-        {% for error in form.email.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endfor %}
-    </p>
-    <p>
-        {% if emailmassage %}
-            <div class="alert alert-danger" role="alert">
-                {{ emailmassage }}
-            </div>
-        {% endif %}
-    </p>
-    <p>
-        {{ form.password1.label }}<br>
-        {{ form.password1(class="form-control", type="password") }}<br>
-        {% for error in form.password1.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.password2.label }}<br>
-        {{ form.password2(class="form-control", type="password") }}<br>
-        {% for error in form.password2.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endfor %}
-    </p>
-    <p>
-        {% if passwordmassage %}
-            <div class="alert alert-danger" role="alert">
-                {{ passwordmassage }}
-            </div>
-        {% endif %}
-    </p>
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name(class="form-control", type="string") }}<br>
-        {% for error in form.name.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-        {% endfor %}
-    </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <div class="row">
+    <div class="col"></div>
+    <div class="col" align="center">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control", type="string", placeholder="Ваше имя") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(class="form-control", placeholder="Ваш email") }}<br>
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {% if emailmassage %}
+                <div class="alert alert-danger" role="alert">
+                    {{ emailmassage }}
+                </div>
+            {% endif %}
+        </p>
+        <p>
+            {{ form.password1.label }}<br>
+            {{ form.password1(class="form-control", type="password", placeholder="Ваш пароль") }}<br>
+            {% for error in form.password1.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password2.label }}<br>
+            {{ form.password2(class="form-control", type="password", placeholder="Повторите ваш пароль") }}<br>
+            {% for error in form.password2.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {% if passwordmassage %}
+                <div class="alert alert-danger" role="alert">
+                    {{ passwordmassage }}
+                </div>
+            {% endif %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </div>
+    <div class="col"></div>
+    </div>
 </form>
 </body>

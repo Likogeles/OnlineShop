@@ -27,10 +27,11 @@
         <div></div>
         <div>
             {% if username %}
-            <p>Вы вошли как {{ username }}</p>
+                <a class="display-6 text-white" >{{ username }}</a>
+                <a class="btn btn-success" href="/log_out" role="button">Выйти</a>
             {% else %}
-            <a class="btn btn-primary" href="/register" role="button">Регистрация</a>
-            <a class="btn btn-success" href="/login" role="button">Войти</a>
+                <a class="btn btn-primary" href="/register" role="button">Регистрация</a>
+                <a class="btn btn-success" href="/login" role="button">Войти</a>
             {% endif %}
         </div>
         <div>
