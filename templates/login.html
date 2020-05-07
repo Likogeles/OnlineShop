@@ -1,46 +1,50 @@
-{% extends "base.html" %}
-
-{% block content %}
-<html lang="en">
+<!doctype html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Авторизация</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <title>{{title}}</title>
 </head>
-<h1>Авторизация</h1>
+<body>
+<h1 align="center">Авторизация</h1>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
-    <p>
+    <p align="center">
         {{ form.email.label }}<br>
-        {{ form.email(class="form-control") }}<br>
+        {{ form.email(class="form-control", placeholder="Email address") }}<br>
         {% for error in form.email.errors %}
             <div class="alert alert-danger" role="alert">
                 {{ error }}
             </div>
         {% endfor %}
     </p>
-    <p>
+    <p align="center">
         {% if messageemail %}
             <div class="alert alert-danger" role="alert">
                 {{ messageemail }}
             </div>
         {% endif %}
     </p>
-    <p>
+    <p align="center">
         {{ form.password.label }}<br>
-        {{ form.password(class="form-control", type="password") }}<br>
+        {{ form.password(class="form-control", type="password", placeholder="Password") }}<br>
         {% for error in form.password.errors %}
             <div class="alert alert-danger" role="alert">
                 {{ error }}
             </div>
         {% endfor %}
     </p>
-    <p>
+    <p align="center">
         {% if messagepass %}
             <div class="alert alert-danger" role="alert">
                 {{ messagepass }}
             </div>
         {% endif %}
     </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p align="center">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
-{% endblock %}
+</body>

@@ -31,15 +31,16 @@ def main():
     product.seller = 1
     product.title = "first product"
     product.number = 15
+    product.description = "description"
     product.image = "*link*"
 
-    user1 = users.User()
-    user1.name = "Ridley"
-    user1.email = "scott_chief@mars.org"
+    # user1 = users.User()
+    # user1.name = "First user"
+    # user1.email = "first_user@shop.org"
 
     session = db_session.create_session()
     session.add(product)
-    session.add(user1)
+    # session.add(user1)
     session.commit()
 
 
@@ -103,7 +104,6 @@ def main_link():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
     productes = session.query(products.Product)
-    print(request.cookies.get("user_id", 0))
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
         return render_template('products.html', products=productes, username=username)
