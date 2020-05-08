@@ -7,16 +7,22 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
+
     <title>{{title}}</title>
 </head>
 <body>
 <div>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark justify-content-between">
-        <div class="badge badge-primary text-wrap" style="width: 13rem;">
-            <h4>АлиАкспресc</h4>
+    <a class="btn btn-primary text-wrap" href="/" role="button" style="width: 10rem;"><h5>АлиАкспресс</h5></a>
+<!--        <div class="badge badge-primary text-wrap" style="width: 13rem;">-->
+<!--            <h4>АлиАкспресc</h4>-->
+<!--        </div>-->
+        <div></div>
+        <div>
+            {% if username %}
+                <a class="btn btn-warning" href="/add_product" role="button">Добавить товар</a>
+            {% endif %}
         </div>
-        <div></div>
-        <div></div>
         <div></div>
         <div></div>
         <div></div>
@@ -36,13 +42,14 @@
         </div>
         <div>
             <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              <input class="form-control mr-sm-2" type="search" placeholder="Поиск товара" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
             </form>
         </div>
 
     </nav>
 </div>
+<br>
 <br>
 <br>
 <main role="main" class="container">

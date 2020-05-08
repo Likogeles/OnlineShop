@@ -12,6 +12,7 @@ class Product(db_session.SqlAlchemyBase):
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    price = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String)
 
     user = orm.relation('User')

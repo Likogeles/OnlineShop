@@ -11,9 +11,10 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark justify-content-between">
-    <div class="badge badge-primary text-wrap" style="width: 13rem;" align="center">
-        <h4>АлиАкспресc</h4>
-    </div>
+    <a class="btn btn-primary text-wrap" href="/" role="button" style="width: 10rem;"><h5>АлиАкспресс</h5></a>
+<!--    <div class="badge badge-primary " style="width: 13rem;" align="center">-->
+<!--        <h4>АлиАкспресc</h4>-->
+<!--    </div>-->
 </nav>
 <br>
 <br>
@@ -56,7 +57,10 @@
                 </div>
             {% endif %}
         </p>
-        <p align="center">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <p align="center">
+            <a class="btn btn-primary" href="/register" role="button">Регистрация</a>
+            {{ form.submit(type="submit", class="btn btn-primary") }}
+        </p>
     </div>
     <div class="col"></div>
     </div>

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, make_response
 from flask_login import LoginManager, login_user
 
-from data import db_session, products, users, loginform, registerform
+from data import db_session, products, users, loginform, registerform, addproductform
 
 
 app = Flask(__name__)
@@ -34,13 +34,13 @@ def main():
     product.description = "description"
     product.image = "*link*"
 
-    # user1 = users.User()
-    # user1.name = "First user"
-    # user1.email = "first_user@shop.org"
+    user1 = users.User()
+    user1.name = "First user"
+    user1.email = "first_user@shop.org"
 
     session = db_session.create_session()
     session.add(product)
-    # session.add(user1)
+    session.add(user1)
     session.commit()
 
 
@@ -68,7 +68,7 @@ def register():
         session.commit()
 
         user = session.query(users.User).filter(users.User.email == form.email.data).first()
-        res = make_response(redirect("/main_link"))
+        res = make_response(redirect("/"))
         res.set_cookie("user_id", str(user.id), max_age=60 * 60)
         return res
     return render_template('register.html', title='Регистрация', form=form)
@@ -86,7 +86,7 @@ def login():
         user = session.query(users.User).filter(users.User.email == form.email.data).first()
         if user:
             if user.hashed_password == form.password.data:
-                res = make_response(redirect("/main_link"))
+                res = make_response(redirect("/"))
                 res.set_cookie("user_id", str(user.id), max_age=60 * 60)
                 return res
             return render_template('login.html',
@@ -105,6 +105,51 @@ def log_out():
     return res
 
 
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    form = addproductform.AddProductForm()
+    db_session.global_init("db/online_shop.sqlite")
+    session = db_session.create_session()
+
+    if form.validate_on_submit():
+        if not form.number.data.isdigit():
+            return render_template('addproduct.html',
+                                   numbermassage="Неверно введено количество",
+                                   form=form)
+        if not form.price.data.isdigit():
+            return render_template('addproduct.html',
+                                   pricemassage="Неверно введена цена",
+                                   form=form)
+
+        product = products.Product()
+        product.seller = request.cookies.get("user_id", 0)
+        product.title = form.title.data
+        product.number = form.number.data
+        product.price = form.price.data
+        product.description = form.description.data
+        product.image = "*link*"
+
+        session.add(product)
+        session.commit()
+
+        return redirect("/")
+    return render_template('addproduct.html', title='Добавить товар', form=form)
+
+
+@app.route('/product/<id>')
+def product(product_id="id"):
+    db_session.global_init("db/online_shop.sqlite")
+    session = db_session.create_session()
+    productes = session.query(products.Product)
+
+    product = session.query(products.Product).filter(products.Product.id == product_id).first()
+
+    if request.cookies.get("user_id", 0):
+        user = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first()
+        return render_template('product.html', product=product, user=user)
+    return render_template('product.html', title=product.title)
+
+
 @app.route('/')
 @app.route('/main_link')
 def main_link():
@@ -114,7 +159,7 @@ def main_link():
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
         return render_template('products.html', products=productes, username=username)
-    return render_template('products.html', products=productes)
+    return render_template('products.html', title="АлиАкспресс", products=productes)
 
 
 if __name__ == '__main__':
