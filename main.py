@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, make_response
+from flask import Flask, render_template, redirect, request, make_response, url_for
 from flask_login import LoginManager, login_user
 
 from data import db_session, products, users, loginform, registerform, addproductform
@@ -28,7 +28,7 @@ def main():
     session = db_session.create_session()
 
     product = products.Product()
-    product.seller = 1
+    product.seller_id = 1
     product.title = "first product"
     product.number = 15
     product.description = "description"
@@ -122,32 +122,37 @@ def add_product():
                                    form=form)
 
         product = products.Product()
-        product.seller = request.cookies.get("user_id", 0)
+        product.seller_id = request.cookies.get("user_id", 0)
+        product.seller = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
         product.title = form.title.data
         product.number = form.number.data
         product.price = form.price.data
         product.description = form.description.data
         product.image = "*link*"
 
+        idd = session.query(products.Product)
+        print(idd[-1].id)
+        product.link = "/product_link/" + str(int(idd[-1].id) + 1)
+
         session.add(product)
         session.commit()
 
         return redirect("/")
-    return render_template('addproduct.html', title='Добавить товар', form=form)
+    username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+    return render_template('addproduct.html', title='Добавить товар', username=username, form=form)
 
 
-@app.route('/product/<id>')
-def product(product_id="id"):
+@app.route('/product_link/<product_id>')
+def product_link(product_id="product_id"):
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
-    productes = session.query(products.Product)
 
     product = session.query(products.Product).filter(products.Product.id == product_id).first()
 
     if request.cookies.get("user_id", 0):
-        user = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first()
-        return render_template('product.html', product=product, user=user)
-    return render_template('product.html', title=product.title)
+        username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+        return render_template('product.html', title=product.title, product=product, username=username)
+    return render_template('product.html', title=product.title, product=product)
 
 
 @app.route('/')

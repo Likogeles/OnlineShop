@@ -4,7 +4,7 @@
 <div>
 <h1 align="center">Товары:</h1>
 </div>
-{% for item in products %}
+{% for item in products[1:] %}
 <div>
     <h2>Product # {{item.id}}</h2>
     <div>
@@ -16,6 +16,7 @@
               <td>Number</td>
               <td>Image</td>
               <td>Description</td>
+              <td>Link</td>
             </tr>
           </thead>
           <tbody>
@@ -25,6 +26,7 @@
               <td>{{ item.number }}</td>
               <td>{{ item.image }}</td>
               <td>{{ item.description }}</td>
+              <td><a class="btn btn-dark" href= {{item.link}} role="button">Открыть страницу в магазине</a></td>
             </tr>
           </tbody>
         </table>
