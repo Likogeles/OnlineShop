@@ -128,10 +128,9 @@ def add_product():
         product.number = form.number.data
         product.price = form.price.data
         product.description = form.description.data
-        product.image = "*link*"
+        product.image = "static/img/Nope.png"
 
         idd = session.query(products.Product)
-        print(idd[-1].id)
         product.link = "/product_link/" + str(int(idd[-1].id) + 1)
 
         session.add(product)
