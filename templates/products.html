@@ -4,27 +4,17 @@
 <div>
 <h1 align="center">Товары:</h1>
 </div>
-{% for item in products[1:] %}
+{% for item in products %}
 <div>
-    <h2>Product # {{item.id}}</h2>
+    <h5>{{ item.title }}</h5>
     <div>
         <table class="table">
-          <thead>
-            <tr bgcolor="#B6B6B6">
-              <td>Seller</td>
-              <td>Title</td>
-              <td>Number</td>
-              <td>Image</td>
-              <td>Description</td>
-              <td>Link</td>
-            </tr>
-          </thead>
           <tbody>
             <tr bgcolor="#D2D2D2">
+              <td><img src={{item.image}} alt="Ну не нашлась картинка" class="img-thumbnail"></td>
               <td>{{ item.seller }}</td>
               <td>{{ item.title }}</td>
               <td>{{ item.number }}</td>
-              <td><img src={{item.image}} alt="Ну не нашлась картинка" class="img-thumbnail"></td>
               <td>{{ item.description }}</td>
               <td><a class="btn btn-dark" href= {{item.link}} role="button">Открыть страницу в магазине</a></td>
             </tr>

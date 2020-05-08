@@ -131,8 +131,10 @@ def add_product():
         product.image = "static/img/Nope.png"
 
         idd = session.query(products.Product)
-        product.link = "/product_link/" + str(int(idd[-1].id) + 1)
-
+        if idd:
+            product.link = "/product_link/" + str(int(idd[-1].id) + 1)
+        else:
+            product.link = "1"
         session.add(product)
         session.commit()
 
