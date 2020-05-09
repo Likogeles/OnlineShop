@@ -30,7 +30,6 @@
         <div></div>
         <div></div>
         <div></div>
-        <div></div>
         <div>
             {% if username %}
                 <a class="display-6 text-white" >{{ username }}</a>
@@ -39,6 +38,14 @@
                 <a class="btn btn-primary" href="/register" role="button">Регистрация</a>
                 <a class="btn btn-success" href="/login" role="button">Войти</a>
             {% endif %}
+        </div>
+        <div>
+            <select class="custom-select custom-select-sm">
+              <option selected>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
         </div>
         <div>
             <form class="form-inline my-2 my-lg-0">

@@ -5,16 +5,15 @@
 <h1 align="center">{{ title }}</h1>
 </div>
 <div>
-    <h2>Product # {{ product.id }}</h2>
     <div>
         <table class="table">
           <tbody>
-            <tr bgcolor="#D2D2D2">
-              <td>{{ product.seller }}</td>
-              <td>{{ product.title }}</td>
-              <td>{{ product.number }}</td>
-              <td>{{ product.image }}</td>
-              <td>{{ product.description }}</td>
+            <tr>
+              <td><img src={{product.image}} alt="Ну не нашлась картинка" class="img-thumbnail"></td>
+              <td>Продавец:<br>{{ product.seller }}</td>
+              <td>Описание:<br>{{ product.description }}</td>
+              <td>Осталось:<br>{{ product.number }} шт.</td>
+              <td>Цена:<br>{{ product.price }} $</td>
             </tr>
           </tbody>
         </table>

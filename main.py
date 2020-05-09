@@ -149,7 +149,6 @@ def product_link(product_id="product_id"):
     session = db_session.create_session()
 
     product = session.query(products.Product).filter(products.Product.id == product_id).first()
-
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
         return render_template('product.html', title=product.title, product=product, username=username)
@@ -164,7 +163,7 @@ def main_link():
     productes = session.query(products.Product)
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        return render_template('products.html', products=productes, username=username)
+        return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
     return render_template('products.html', title="АлиАкспресс", products=productes)
 
 

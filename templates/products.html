@@ -6,16 +6,16 @@
 </div>
 {% for item in products %}
 <div>
-    <h5>{{ item.title }}</h5>
+    <a href= {{item.link}} role="button"><h5>{{ item.title }}</h5></a>
     <div>
         <table class="table">
           <tbody>
-            <tr bgcolor="#D2D2D2">
+            <tr>
               <td><img src={{item.image}} alt="Ну не нашлась картинка" class="img-thumbnail"></td>
-              <td>{{ item.seller }}</td>
-              <td>{{ item.title }}</td>
-              <td>{{ item.number }}</td>
-              <td>{{ item.description }}</td>
+              <td>Продавец:<br>{{ item.seller }}</td>
+              <td>Описание:<br>{{ item.description }}</td>
+              <td>Осталось:<br>{{ item.number }} шт.</td>
+              <td>Цена:<br>{{ item.price }} $</td>
               <td><a class="btn btn-dark" href= {{item.link}} role="button">Открыть страницу в магазине</a></td>
             </tr>
           </tbody>
