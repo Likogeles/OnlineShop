@@ -155,6 +155,15 @@ def product_link(product_id="product_id"):
     return render_template('product.html', title=product.title, product=product)
 
 
+@app.route('/del_product', methods=['GET', 'POST'])
+def del_product():
+    db_session.global_init("db/online_shop.sqlite")
+    session = db_session.create_session()
+    # session.delete
+    res = make_response(redirect("/"))
+    return res
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/main_link', methods=['GET', 'POST'])
 # @app.route('/')
