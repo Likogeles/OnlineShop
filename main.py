@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, make_response, url_for
 from flask_login import LoginManager, login_user
 
-from data import db_session, products, users, loginform, registerform, addproductform
+from data import db_session, products, users, loginform, registerform, addproductform, baseform
 
 
 app = Flask(__name__)
@@ -155,16 +155,24 @@ def product_link(product_id="product_id"):
     return render_template('product.html', title=product.title, product=product)
 
 
-@app.route('/')
-@app.route('/main_link')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/main_link', methods=['GET', 'POST'])
+# @app.route('/')
+# @app.route('/main_link')
 def main_link():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
+    form = baseform.BaseForm()
     productes = session.query(products.Product)
+
+    # print(form.validate_on_submit())
+    # if form.validate_on_submit():
+    #     print(form.select.data)
+
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
-    return render_template('products.html', title="АлиАкспресс", products=productes)
+        return render_template('products.html', form=form, title="АлиАкспресс", products=productes, username=username)
+    return render_template('products.html', form=form, title="АлиАкспресс", products=productes)
 
 
 if __name__ == '__main__':

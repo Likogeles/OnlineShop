@@ -12,18 +12,15 @@
 </head>
 <body>
 <div>
+    {{ form.hidden_tag() }}
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark justify-content-between">
     <a class="btn btn-primary text-wrap" href="/" role="button" style="width: 10rem;"><h5>АлиАкспресс</h5></a>
-<!--        <div class="badge badge-primary text-wrap" style="width: 13rem;">-->
-<!--            <h4>АлиАкспресc</h4>-->
-<!--        </div>-->
         <div></div>
         <div>
             {% if username %}
                 <a class="btn btn-warning" href="/add_product" role="button">Добавить товар</a>
             {% endif %}
         </div>
-        <div></div>
         <div></div>
         <div></div>
         <div></div>
@@ -46,12 +43,17 @@
               <option value="2">Two</option>
               <option value="3">Three</option>
             </select>
+<!--            {{ form.select(class="custom-select custom-select-sm") }}-->
         </div>
         <div>
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Поиск товара" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
-            </form>
+<!--            <form class="form-inline my-2 my-lg-0">-->
+<!--              <input class="form-control mr-sm-2" type="search" placeholder="Поиск товара" aria-label="Search">-->
+<!--              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>-->
+<!--            </form>-->
+            {{ form.search(class="form-control", type="string", placeholder="Поиск товара") }}
+        </div>
+        <div>
+            {{ form.submit(type="submit", class="btn btn-primary") }}
         </div>
 
     </nav>
