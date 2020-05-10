@@ -15,6 +15,8 @@ class Product(db_session.SqlAlchemyBase):
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     price = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    del_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    order_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String)
 
     user = orm.relation('User')

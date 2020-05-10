@@ -32,7 +32,9 @@ def main():
     product.title = "first product"
     product.number = 15
     product.description = "description"
-    product.image = "*link*"
+    product.image = "/static/img/Nope.png"
+    product.link = "/product_link/1"
+    product.del_link = "del_product/1"
 
     user1 = users.User()
     user1.name = "First user"
@@ -128,13 +130,17 @@ def add_product():
         product.number = form.number.data
         product.price = form.price.data
         product.description = form.description.data
-        product.image = "static/img/Nope.png"
+        product.image = "/static/img/Nope.png"
 
         idd = session.query(products.Product)
         if idd:
             product.link = "/product_link/" + str(int(idd[-1].id) + 1)
+            product.del_link = "/del_product/" + str(int(idd[-1].id) + 1)
+            product.order_link = "/order_link/" + str(int(idd[-1].id) + 1)
         else:
-            product.link = "1"
+            product.link = "/product_link/1"
+            product.del_link = "/del_product/1"
+            product.order_link = "/order_link/1"
         session.add(product)
         session.commit()
 
@@ -151,32 +157,40 @@ def product_link(product_id="product_id"):
     product = session.query(products.Product).filter(products.Product.id == product_id).first()
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        return render_template('product.html', title=product.title, product=product, username=username)
+        userid = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().id
+        return render_template('product.html', title=product.title, product=product, username=username, userid=userid)
     return render_template('product.html', title=product.title, product=product)
 
 
-@app.route('/del_product', methods=['GET', 'POST'])
-def del_product():
+@app.route('/del_product/<id>', methods=['GET', 'POST'])
+def del_product(id="id"):
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
-    # session.delete
-    res = make_response(redirect("/"))
-    return res
+    product = session.query(products.Product).filter(products.Product.id == id).first()
+    if product:
+        session.delete(product)
+        session.commit()
+    return redirect("/")
+
+
+@app.route('/order_link/<id>', methods=['GET', 'POST'])
+def order_link(id="id"):
+    db_session.global_init("db/online_shop.sqlite")
+    session = db_session.create_session()
+    product = session.query(products.Product).filter(products.Product.id == id).first()
+    if product:
+        product.number -= 1
+        session.commit()
+    return redirect("/")
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/main_link', methods=['GET', 'POST'])
-# @app.route('/')
-# @app.route('/main_link')
 def main_link():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
     form = baseform.BaseForm()
     productes = session.query(products.Product)
-
-    # print(form.validate_on_submit())
-    # if form.validate_on_submit():
-    #     print(form.select.data)
 
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
