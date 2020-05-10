@@ -212,10 +212,7 @@ def filter_link(word="word"):
         if word:
             return redirect("/filter_link/" + word)
         else:
-            if request.cookies.get("user_id", 0):
-                username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-                return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
-            return render_template('products.html', title="АлиАкспресс", word=word, products=productes)
+            return redirect("/")
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -227,7 +224,7 @@ def main_link():
     productes = session.query(products.Product)
 
     if request.method == "GET":
-
+        productes = list(productes)
         if request.cookies.get("user_id", 0):
             username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
             return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
