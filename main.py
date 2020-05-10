@@ -133,7 +133,8 @@ def add_product():
         product.image = "/static/img/Nope.png"
 
         idd = session.query(products.Product)
-        if idd:
+        print(idd.count())
+        if idd.count() > 0:
             product.link = "/product_link/" + str(int(idd[-1].id) + 1)
             product.del_link = "/del_product/" + str(int(idd[-1].id) + 1)
             product.order_link = "/order_link/" + str(int(idd[-1].id) + 1)
@@ -153,13 +154,14 @@ def add_product():
 def product_link(product_id="product_id"):
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
+    form = baseform.BaseForm()
 
     product = session.query(products.Product).filter(products.Product.id == product_id).first()
     if request.cookies.get("user_id", 0):
         username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
         userid = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().id
-        return render_template('product.html', title=product.title, product=product, username=username, userid=userid)
-    return render_template('product.html', title=product.title, product=product)
+        return render_template('product.html', form=form, title=product.title, product=product, username=username, userid=userid)
+    return render_template('product.html', form=form, title=product.title, product=product)
 
 
 @app.route('/del_product/<id>', methods=['GET', 'POST'])
@@ -184,6 +186,38 @@ def order_link(id="id"):
     return redirect("/")
 
 
+@app.route('/filter_link/<word>', methods=['GET', 'POST'])
+def filter_link(word="word"):
+    db_session.global_init("db/online_shop.sqlite")
+    session = db_session.create_session()
+    form = baseform.BaseForm()
+
+    productes = session.query(products.Product)
+    if request.method == "GET":
+        arr = []
+        for item in productes:
+            if word in item.title:
+                arr.append(item)
+
+        if request.cookies.get("user_id", 0):
+            username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+            return render_template('products.html', form=form, title="АлиАкспресс", products=arr, username=username)
+        return render_template('products.html', form=form, title="АлиАкспресс", products=arr)
+    elif request.method == "POST":
+
+        word = None
+        if form.search.data:
+            word = request.form["search"]
+
+        if word:
+            return redirect("/filter_link/" + word)
+        else:
+            if request.cookies.get("user_id", 0):
+                username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+                return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
+            return render_template('products.html', title="АлиАкспресс", word=word, products=productes)
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/main_link', methods=['GET', 'POST'])
 def main_link():
@@ -192,10 +226,26 @@ def main_link():
     form = baseform.BaseForm()
     productes = session.query(products.Product)
 
-    if request.cookies.get("user_id", 0):
-        username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        return render_template('products.html', form=form, title="АлиАкспресс", products=productes, username=username)
-    return render_template('products.html', form=form, title="АлиАкспресс", products=productes)
+    if request.method == "GET":
+
+        if request.cookies.get("user_id", 0):
+            username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+            return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
+        return render_template('products.html', title="АлиАкспресс", products=productes)
+
+    elif request.method == "POST":
+
+        word = None
+        if form.search.data:
+            word = request.form["search"]
+
+        if word:
+            return redirect("/filter_link/" + word)
+        else:
+            if request.cookies.get("user_id", 0):
+                username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+                return render_template('products.html', title="АлиАкспресс", products=productes, username=username)
+            return render_template('products.html', title="АлиАкспресс", word=word, products=productes)
 
 
 if __name__ == '__main__':
