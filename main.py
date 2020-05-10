@@ -27,22 +27,26 @@ def main():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
 
-    product = products.Product()
-    product.seller_id = 1
-    product.title = "first product"
-    product.number = 15
-    product.description = "description"
-    product.image = "/static/img/Nope.png"
-    product.link = "/product_link/1"
-    product.del_link = "del_product/1"
+    if list(session.query(products.Product)):
+        product = products.Product()
+        product.seller_id = 1
+        product.title = "first product"
+        product.number = 15
+        product.description = "description"
+        product.price = "12"
+        product.image = "/static/img/Nope.png"
+        product.link = "/product_link/1"
+        product.del_link = "/del_product/1"
+        product.order_link = "/order_link/1"
+        session.add(product)
 
-    user1 = users.User()
-    user1.name = "First user"
-    user1.email = "first_user@shop.org"
+    if list(session.query(users.User)):
+        user1 = users.User()
+        user1.name = "Scott"
+        user1.email = "scott_chief@shop.org"
+        user1.hashed_password = 123
+        session.add(user1)
 
-    session = db_session.create_session()
-    session.add(product)
-    session.add(user1)
     session.commit()
 
 
@@ -267,5 +271,5 @@ def main_link():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
     app.run(port=8080, host='127.0.0.1')
