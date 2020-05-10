@@ -1,49 +1,6 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous">
-    <title>{{title}}</title>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark justify-content-between">
-    <a class="btn btn-primary text-wrap" href="/" role="button" style="width: 10rem;"><h5>АлиАкспресс</h5></a>
-<!--        <div class="badge badge-primary text-wrap" style="width: 13rem;">-->
-<!--            <h4>АлиАкспресc</h4>-->
-<!--        </div>-->
-        <div></div>
-        <div>
-            {% if username %}
-                <a class="btn btn-warning" href="/add_product" role="button">Добавить товар</a>
-            {% endif %}
-        </div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div>
-            {% if username %}
-                <a class="display-6 text-white" >{{ username }}</a>
-                <a class="btn btn-success" href="/log_out" role="button">Выйти</a>
-            {% else %}
-                <a class="btn btn-primary" href="/register" role="button">Регистрация</a>
-                <a class="btn btn-success" href="/login" role="button">Войти</a>
-            {% endif %}
-        </div>
-        <div></div>
+{% extends "base.html" %}
 
-    </nav>
-<br>
-<br>
-<br>
+{% block content %}
 <h1 align="center">Добавление товара</h1>
 <form action="" method="post" novalidate>
     <div class="row">
@@ -107,3 +64,4 @@
     </div>
 </form>
 </body>
+{% endblock %}

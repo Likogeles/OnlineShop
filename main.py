@@ -10,7 +10,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-@app.route('/cookie_drop', methods=['GET', 'POST'])
+@app.route('/cookie_drop')
 def cookie_drop():
     res = make_response("Вы съели печенье :-(")
     res.set_cookie("user_id", str(0), max_age=0)
@@ -51,7 +51,6 @@ def register():
     form = registerform.RegisterForm()
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
-
     if form.validate_on_submit():
         if session.query(users.User).filter(users.User.email == form.email.data).first():
             return render_template('register.html',
@@ -83,7 +82,6 @@ def login():
     session = db_session.create_session()
     session.commit()
 
-    print("validate: " + str(form.validate_on_submit()))
     if form.validate_on_submit():
         user = session.query(users.User).filter(users.User.email == form.email.data).first()
         if user:
@@ -100,7 +98,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/log_out', methods=['GET', 'POST'])
+@app.route('/log_out')
 def log_out():
     res = make_response(redirect("/"))
     res.set_cookie("user_id", str(0), max_age=0)
@@ -113,55 +111,77 @@ def add_product():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
 
-    if form.validate_on_submit():
-        if not form.number.data.isdigit():
-            return render_template('addproduct.html',
-                                   numbermassage="Неверно введено количество",
-                                   form=form)
-        if not form.price.data.isdigit():
-            return render_template('addproduct.html',
-                                   pricemassage="Неверно введена цена",
-                                   form=form)
+    if request.method == "GET":
+        if form.validate_on_submit():
+            if not form.number.data.isdigit():
+                return render_template('addproduct.html',
+                                       numbermassage="Неверно введено количество",
+                                       form=form)
+            if not form.price.data.isdigit():
+                return render_template('addproduct.html',
+                                       pricemassage="Неверно введена цена",
+                                       form=form)
 
-        product = products.Product()
-        product.seller_id = request.cookies.get("user_id", 0)
-        product.seller = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        product.title = form.title.data
-        product.number = form.number.data
-        product.price = form.price.data
-        product.description = form.description.data
-        product.image = "/static/img/Nope.png"
+            product = products.Product()
+            product.seller_id = request.cookies.get("user_id", 0)
+            product.seller = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+            product.title = form.title.data
+            product.number = form.number.data
+            product.price = form.price.data
+            product.description = form.description.data
+            product.image = "/static/img/Nope.png"
 
-        idd = session.query(products.Product)
-        print(idd.count())
-        if idd.count() > 0:
-            product.link = "/product_link/" + str(int(idd[-1].id) + 1)
-            product.del_link = "/del_product/" + str(int(idd[-1].id) + 1)
-            product.order_link = "/order_link/" + str(int(idd[-1].id) + 1)
+            idd = session.query(products.Product)
+            if idd.count() > 0:
+                product.link = "/product_link/" + str(int(idd[-1].id) + 1)
+                product.del_link = "/del_product/" + str(int(idd[-1].id) + 1)
+                product.order_link = "/order_link/" + str(int(idd[-1].id) + 1)
+            else:
+                product.link = "/product_link/1"
+                product.del_link = "/del_product/1"
+                product.order_link = "/order_link/1"
+            session.add(product)
+            session.commit()
+
+            return redirect("/")
+        username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+        return render_template('addproduct.html', title='Добавить товар', username=username, form=form)
+
+    elif request.method == "POST":
+
+        word = None
+        if form.search.data:
+            word = request.form["search"]
+
+        if word:
+            return redirect("/filter_link/" + word)
         else:
-            product.link = "/product_link/1"
-            product.del_link = "/del_product/1"
-            product.order_link = "/order_link/1"
-        session.add(product)
-        session.commit()
-
-        return redirect("/")
-    username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-    return render_template('addproduct.html', title='Добавить товар', username=username, form=form)
+            return redirect("/")
 
 
-@app.route('/product_link/<product_id>')
+@app.route('/product_link/<product_id>', methods=['GET', 'POST'])
 def product_link(product_id="product_id"):
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
     form = baseform.BaseForm()
 
     product = session.query(products.Product).filter(products.Product.id == product_id).first()
-    if request.cookies.get("user_id", 0):
-        username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        userid = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().id
-        return render_template('product.html', form=form, title=product.title, product=product, username=username, userid=userid)
-    return render_template('product.html', form=form, title=product.title, product=product)
+    if request.method == "GET":
+        if request.cookies.get("user_id", 0):
+            username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+            userid = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().id
+            return render_template('product.html', title=product.title, product=product, username=username, userid=userid)
+        return render_template('product.html', title=product.title, product=product)
+
+    elif request.method == "POST":
+        word = None
+        if form.search.data:
+            word = request.form["search"]
+
+        if word:
+            return redirect("/filter_link/" + word)
+        else:
+            return redirect("/")
 
 
 @app.route('/del_product/<id>', methods=['GET', 'POST'])
@@ -203,6 +223,7 @@ def filter_link(word="word"):
             username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
             return render_template('products.html', form=form, title="АлиАкспресс", products=arr, username=username)
         return render_template('products.html', form=form, title="АлиАкспресс", products=arr)
+
     elif request.method == "POST":
 
         word = None
