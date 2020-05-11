@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect, request, make_response, url_for
-from flask_login import LoginManager, login_user
+from flask import Flask, render_template, redirect, request, make_response, jsonify, Blueprint
+from flask_login import LoginManager
 
 from data import db_session, products, users, loginform, registerform, addproductform, baseform
 
@@ -8,6 +8,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+blueprint = Blueprint('products_api', __name__,
+                            template_folder='templates')
 
 
 @app.route('/cookie_drop')
@@ -27,25 +30,23 @@ def main():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
 
-    if list(session.query(products.Product)):
-        product = products.Product()
-        product.seller_id = 1
-        product.title = "first product"
-        product.number = 15
-        product.description = "description"
-        product.price = "12"
-        product.image = "/static/img/Nope.png"
-        product.link = "/product_link/1"
-        product.del_link = "/del_product/1"
-        product.order_link = "/order_link/1"
-        session.add(product)
+    product = products.Product()
+    product.seller_id = 1
+    product.title = "first product"
+    product.number = 15
+    product.description = "description"
+    product.price = "12"
+    product.image = "/static/img/Nope.png"
+    product.link = "/product_link/1"
+    product.del_link = "/del_product/1"
+    product.order_link = "/order_link/1"
+    session.add(product)
 
-    if list(session.query(users.User)):
-        user1 = users.User()
-        user1.name = "Scott"
-        user1.email = "scott_chief@shop.org"
-        user1.hashed_password = 123
-        session.add(user1)
+    user1 = users.User()
+    user1.name = "Scott"
+    user1.email = "scott_chief@shop.org"
+    user1.hashed_password = 123
+    session.add(user1)
 
     session.commit()
 
@@ -115,52 +116,40 @@ def add_product():
     db_session.global_init("db/online_shop.sqlite")
     session = db_session.create_session()
 
-    if request.method == "GET":
-        if form.validate_on_submit():
-            if not form.number.data.isdigit():
-                return render_template('addproduct.html',
-                                       numbermassage="Неверно введено количество",
-                                       form=form)
-            if not form.price.data.isdigit():
-                return render_template('addproduct.html',
-                                       pricemassage="Неверно введена цена",
-                                       form=form)
+    if form.validate_on_submit():
+        if not form.number.data.isdigit():
+            return render_template('addproduct.html',
+                                   numbermassage="Неверно введено количество",
+                                   form=form)
+        if not form.price.data.isdigit():
+            return render_template('addproduct.html',
+                                   pricemassage="Неверно введена цена",
+                                   form=form)
 
-            product = products.Product()
-            product.seller_id = request.cookies.get("user_id", 0)
-            product.seller = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-            product.title = form.title.data
-            product.number = form.number.data
-            product.price = form.price.data
-            product.description = form.description.data
-            product.image = "/static/img/Nope.png"
+        product = products.Product()
+        product.seller_id = request.cookies.get("user_id", 0)
+        product.seller = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+        product.title = form.title.data
+        product.number = form.number.data
+        product.price = form.price.data
+        product.description = form.description.data
+        product.image = "/static/img/Nope.png"
 
-            idd = session.query(products.Product)
-            if idd.count() > 0:
-                product.link = "/product_link/" + str(int(idd[-1].id) + 1)
-                product.del_link = "/del_product/" + str(int(idd[-1].id) + 1)
-                product.order_link = "/order_link/" + str(int(idd[-1].id) + 1)
-            else:
-                product.link = "/product_link/1"
-                product.del_link = "/del_product/1"
-                product.order_link = "/order_link/1"
-            session.add(product)
-            session.commit()
-
-            return redirect("/")
-        username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
-        return render_template('addproduct.html', title='Добавить товар', username=username, form=form)
-
-    elif request.method == "POST":
-
-        word = None
-        if form.search.data:
-            word = request.form["search"]
-
-        if word:
-            return redirect("/filter_link/" + word)
+        idd = session.query(products.Product)
+        if idd.count() > 0:
+            product.link = "/product_link/" + str(int(idd[-1].id) + 1)
+            product.del_link = "/del_product/" + str(int(idd[-1].id) + 1)
+            product.order_link = "/order_link/" + str(int(idd[-1].id) + 1)
         else:
-            return redirect("/")
+            product.link = "/product_link/1"
+            product.del_link = "/del_product/1"
+            product.order_link = "/order_link/1"
+        session.add(product)
+        session.commit()
+
+        return redirect("/")
+    username = session.query(users.User).filter(users.User.id == request.cookies.get("user_id", 0)).first().name
+    return render_template('addproduct.html', title='Добавить товар', username=username, form=form)
 
 
 @app.route('/product_link/<product_id>', methods=['GET', 'POST'])
@@ -208,6 +197,25 @@ def order_link(id="id"):
         product.number -= 1
         session.commit()
     return redirect("/")
+
+
+@app.route('/api/products', methods=['GET', 'POST'])
+def api_products():
+    db_session.global_init("db/online_shop.sqlite")
+    session = db_session.create_session()
+    productes = session.query(products.Product)
+    print(jsonify(
+                {
+                    'products':
+                        [item.to_dict(only=('title', 'number', 'price', 'seller_id')) for item in productes]
+                }
+            ))
+    return jsonify(
+                {
+                    'products':
+                        [item.to_dict(only=('title', 'number', 'price', 'seller_id')) for item in productes]
+                }
+            )
 
 
 @app.route('/filter_link/<word>', methods=['GET', 'POST'])
@@ -271,5 +279,6 @@ def main_link():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    # app.register_blueprint(products_api.blueprint)
     app.run(port=8080, host='127.0.0.1')
