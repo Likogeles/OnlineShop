@@ -10,5 +10,6 @@ class AddProductForm(FlaskForm):
     number = StringField('Количество', validators=[DataRequired()])
     description = StringField('Описание', validators=[DataRequired()])
     price = StringField('Цена', validators=[DataRequired()])
+    product_type = StringField('Тип товара', validators=[DataRequired()])
     # image = FileField("Изображение", validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField('Добавить')

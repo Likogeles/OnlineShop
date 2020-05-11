@@ -15,6 +15,7 @@ class Product(db_session.SqlAlchemyBase, SerializerMixin):
     number = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     price = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    product_type = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     del_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     order_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)

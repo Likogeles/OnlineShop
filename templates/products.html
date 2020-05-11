@@ -14,6 +14,7 @@
                     <tr>
                       <td><img src={{item.image}} alt="Ну не нашлась картинка" class="img-thumbnail"></td>
                       <td>Продавец:<br>{{ item.seller }}</td>
+                      <td>Тип:<br>{{ item.product_type }}</td>
                       <td>Описание:<br>{{ item.description }}</td>
                       <td>Осталось:<br>{{ item.number }} шт.</td>
                       <td>Цена:<br>{{ item.price }} $</td>
@@ -25,6 +26,6 @@
         </div>
     {% endfor %}
 {% else %}
-    <h3 align="center" color="grey">Похоже, ничего не нашлось :-(</h3>
+    <h5 align="center">Похоже, ничего не нашлось :-(</h5>
 {% endif %}
 {% endblock %}
